@@ -125,7 +125,7 @@
         <div class="message-container">
             <div class="message-box">
                 <p class="error">' . $mensaje . '</p>
-                <a class="button" href="http://localhost/DSI30/Hackathon/FAcceso.html">Volver al acceso</a>
+                <a class="button" href="http://localhost/DSI30/Hackathon/FAcceso.php">Volver al acceso</a>
             </div>
         </div>
     </body>
