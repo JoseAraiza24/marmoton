@@ -320,33 +320,37 @@ Las preguntas comunes podrían incluir:
             const message = input.value.trim();
 
             if (message) {
+                // Agregar mensaje del usuario al chatbox
                 const userMsg = document.createElement('div');
                 userMsg.className = 'message user-message';
                 userMsg.textContent = 'Tú: ' + message;
                 messages.appendChild(userMsg);
 
+                // Limpiar el input
                 input.value = '';
 
+                // Enviar el mensaje al servidor
                 fetch(window.location.href, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'action=chat&message=' + encodeURIComponent(message)
+                    body: `action=chat&message=${encodeURIComponent(message)}`
                 })
                 .then(response => response.json())
-                .then(data => {
-                    const botMsg = document.createElement('div');
-                    botMsg.className = 'message bot-message';
-                    botMsg.textContent = 'Asistente: ' + data.reply;
-                    messages.appendChild(botMsg);
-                    messages.scrollTop = messages.scrollHeight;
+                .then(result => {
+                    if (result.reply) {
+                        // Agregar respuesta del bot al chatbox
+                        const botMsg = document.createElement('div');
+                        botMsg.className = 'message bot-message';
+                        botMsg.textContent = 'Asistente: ' + result.reply;
+                        messages.appendChild(botMsg);
+                        
+                        // Hacer scroll hasta el último mensaje
+                        messages.scrollTop = messages.scrollHeight;
+                    } else {
+                        console.error("Error: No se recibió respuesta del servidor.");
+                    }
                 })
-                .catch(error => {
-                    console.error('Error al enviar mensaje:', error);
-                    const errorMsg = document.createElement('div');
-                    errorMsg.className = 'message bot-message';
-                    errorMsg.textContent = 'Asistente: Error al procesar tu mensaje.';
-                    messages.appendChild(errorMsg);
-                });
+                .catch(error => console.error('Error al enviar mensaje:', error));
             }
         }
 
